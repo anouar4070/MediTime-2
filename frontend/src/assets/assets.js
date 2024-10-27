@@ -90,7 +90,7 @@ export const doctors = [
         _id: 'doc1',
         name: 'Dr. Ahmed Ben Youssef',
         image: doc1,
-        speciality: 'General physician',
+        speciality: 'Gastroenterologist',
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Ben Youssef has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
