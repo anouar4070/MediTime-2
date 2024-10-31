@@ -6,8 +6,9 @@ import { assets } from "../assets/assets";
 const Appointment = () => {
   const { docId } = useParams();
   const { doctors, currencySymbol } = useContext(AppContext);
-  const [docInfo, setDocInfo] = useState(null);
+  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+  const [docInfo, setDocInfo] = useState(false);
   const [docSlots, setDocSlots] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
@@ -119,6 +120,33 @@ const Appointment = () => {
                 {docInfo.fees} {currencySymbol}{" "}
               </span>
             </p>
+          </div>
+        </div>
+        {/* ----Booking Slots---- */}
+        <div className="sm:ml-72 sm:pl-4 mt-8 font-medium text-gray-700 ">
+          <p>Booking slots</p>
+          <div className="flex gap-3 items-center w-full overflow-x-scroll mt-4 ">
+            {docSlots.length &&
+              docSlots.map((item, index) => (
+                <div
+                  onClick={() => setSlotIndex(index)}
+                  className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${
+                    slotIndex === index
+                      ? "bg-primary text-white"
+                      : "border border-gray-200"
+                  }`}
+                  key={index}
+                >
+                  <p>{item[0] && daysOfWeek[item[0].dateTime.getDay()]}</p>
+                  <p>{item[0] && item[0].dateTime.getDate()}</p>
+                </div>
+              ))}
+          </div>
+          <div>
+            {docSlots.length &&
+              docSlots[slotIndex].map((item, index) => (
+                <p className={} key={index}>{item.time.toLowerCase()} </p>
+              ))}
           </div>
         </div>
       </div>
