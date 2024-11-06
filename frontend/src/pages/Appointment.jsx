@@ -142,12 +142,15 @@ const Appointment = () => {
                 </div>
               ))}
           </div>
-          <div>
-            {docSlots.length &&
-              docSlots[slotIndex].map((item, index) => (
-                <p className={} key={index}>{item.time.toLowerCase()} </p>
+
+          <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4 ">
+            
+            {docSlots.length && docSlots[slotIndex].map((item, index) => (
+            <p key={index} onClick={() => setSlotTime(item.time) } className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-gray-400 border border-gray-300'}`}>
+                  {item.time.toLowerCase()} </p>
               ))}
           </div>
+
         </div>
       </div>
     )
@@ -155,3 +158,11 @@ const Appointment = () => {
 };
 
 export default Appointment;
+
+
+//  <div className='flex items-center gap-3 w-full overflow-x-scroll mt-4'>
+//                     {docSlots.length && docSlots[slotIndex].map((item, index) => (
+//                         <p onClick={() => setSlotTime(item.time)} key={index} className={`text-sm font-light
+// flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-[#949494] border border-[#B4B4B4]'}`}>{item.time.toLowerCase()}</p>
+//                     ))}
+//                 </div> 
