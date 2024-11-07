@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/appContext";
 import { assets } from "../assets/assets";
+import RelatedDoctors from "../components/RelatedDoctors";
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -144,25 +145,32 @@ const Appointment = () => {
           </div>
 
           <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4 ">
-            
-            {docSlots.length && docSlots[slotIndex].map((item, index) => (
-            <p key={index} onClick={() => setSlotTime(item.time) } className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-gray-400 border border-gray-300'}`}>
-                  {item.time.toLowerCase()} </p>
+            {docSlots.length &&
+              docSlots[slotIndex].map((item, index) => (
+                <p
+                  key={index}
+                  onClick={() => setSlotTime(item.time)}
+                  className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${
+                    item.time === slotTime
+                      ? "bg-primary text-white"
+                      : "text-gray-400 border border-gray-300"
+                  }`}
+                >
+                  {item.time.toLowerCase()}{" "}
+                </p>
               ))}
           </div>
-
+          <button className="bg-primary text-white text-sm font-light px-14 rounded-full py-3 my-6">
+            Book an appointment
+          </button>
         </div>
+
+        {/* Listing related doctors */}
+        <RelatedDoctors docId={docId} speciality={docInfo.speciality} />
+
       </div>
     )
   );
 };
 
 export default Appointment;
-
-
-//  <div className='flex items-center gap-3 w-full overflow-x-scroll mt-4'>
-//                     {docSlots.length && docSlots[slotIndex].map((item, index) => (
-//                         <p onClick={() => setSlotTime(item.time)} key={index} className={`text-sm font-light
-// flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-[#949494] border border-[#B4B4B4]'}`}>{item.time.toLowerCase()}</p>
-//                     ))}
-//                 </div> 
