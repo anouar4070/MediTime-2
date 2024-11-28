@@ -10,7 +10,7 @@ const doctorSchema = new mongoose.Schema(
     degree: { type: String, required: true },
     experience: { type: String, required: true },
     about: { type: String, required: true },
-    available: { type: Boolean, required: true },
+    available: { type: Boolean, default: true },
     fees: { type: Number, required: true },
     address: { type: Object, required: true },
     date: { type: Number, required: true },
@@ -19,6 +19,10 @@ const doctorSchema = new mongoose.Schema(
   { minimize: false } // allow saving empty object
 );
 
-const doctorModel = mongoose.models.doctor ||mongoose.model("doctor", doctorSchema);
+const doctorModel =
+  mongoose.models.doctor || mongoose.model("doctor", doctorSchema);
 
 export default doctorModel;
+
+//If the "doctor" model already exists in mongoose.models, it uses that model (mongoose.models.doctor).
+//Otherwise, it creates and registers a new model (mongoose.model("doctor", doctorSchema)).
