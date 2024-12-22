@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-  mongoose.connection.on("connected", () => console.log("DataBase connected!"));
-  await mongoose.connect(`${process.env.MONGODB_URI}/meditime`);
+    try {
+        mongoose.connection.on('connected', () => console.log("Database Connected"));
+        await mongoose.connect(process.env.MONGODB_URI);
+    } catch (err) {
+        console.error("Database Connection Error:", err.message);
+        
+    }
 };
 
 export default connectDB;
