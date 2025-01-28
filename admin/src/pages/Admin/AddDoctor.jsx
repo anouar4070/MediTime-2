@@ -46,11 +46,21 @@ const {data} = await axios.post(backendUrl+'/api/admin/add-doctor', formData, {
 })
 if(data.success){
   toast.success(data.message)
+  setDocImg(false)
+  setName('')
+  setPassword('')
+  setEmail('')
+  setAbout('')
+  setAddress1('')
+  setAddress2('')
+  setDegree('')
+  setFees('')
 } else {
   toast.error(data.message)
 }
   } catch (error) {
-    
+    toast.error(error.message)
+    console.log(error)
   }
 }
 
@@ -155,3 +165,7 @@ if(data.success){
 };
 
 export default AddDoctor;
+
+
+// formData.append(key, value)
+// formData.append("name", "amine")
