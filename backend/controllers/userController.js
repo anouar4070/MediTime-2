@@ -1,6 +1,7 @@
 import validator from "validator";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
+import doctorModel from '../models/doctorModel.js'
 import jwt from "jsonwebtoken";
 import {v2 as cloudinary } from 'cloudinary'
 
@@ -98,6 +99,26 @@ const updateProfile = async (req, res) => {
 
   } catch (error) {
     console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+//API to book appointment
+const bookAppointment = async (req, res) => {
+  try {
+    const { userId, docId, slotDate, slotTime } = req.body;
+
+    const docData = await doctorModel.findById(docId).select("-password");
+    if(!docData.available) {
+      return res.json({ success: false, message: "Doctor not available !" });
+    }
+    
+    //*** Checking for slot availibilty ***/ 
+    let slots_booked = docData.slots_booked 
+    
+  } catch (error) {
+    console.log(error);
+    
     res.json({ success: false, message: error.message });
   }
 };
