@@ -51,7 +51,8 @@ const value = {
   backendUrl,
   userData,
   setUserData,
-loadUserProfileData
+loadUserProfileData,
+getDoctorsData
 
 };
 

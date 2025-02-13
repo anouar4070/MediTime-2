@@ -4,6 +4,7 @@ import userModel from "../models/userModel.js";
 import doctorModel from '../models/doctorModel.js'
 import jwt from "jsonwebtoken";
 import {v2 as cloudinary } from 'cloudinary'
+import appointmentModel from "../models/appointmentModel.js";
 
 // API to register User
 const registerUser = async (req, res) => {
@@ -109,13 +110,42 @@ const bookAppointment = async (req, res) => {
     const { userId, docId, slotDate, slotTime } = req.body;
 
     const docData = await doctorModel.findById(docId).select("-password");
+
     if(!docData.available) {
       return res.json({ success: false, message: "Doctor not available !" });
     }
     
-    //*** Checking for slot availibilty ***/ 
+    
     let slots_booked = docData.slots_booked 
     
+//*** Checking for slot availability ***/ 
+if (slots_booked[slotDate]) {
+  if(slots_booked[slotDate].includes(slotTime)){
+    return res.json({ success: false, message: "Slot not available !" });
+  } else {
+    slots_booked[slotDate].push(slotTime)
+  }
+} else {
+  slots_booked[slotDate] = []
+  slots_booked[slotDate].push(slotTime)
+}
+
+const userData = await userModel.findById(userId).select("-password")
+
+delete docData.slots_booked
+
+const appointmentData = {
+  userId, docId, userData, docData, amount: docData.fees, slotTime, slotDate, date: Date.now()
+}
+
+const newAppointment = new appointmentModel(appointmentData)
+await newAppointment.save()
+
+//Save new slots data in docData
+await doctorModel.findByIdAndUpdate(docId, {slots_booked})
+ res.json({ success: true, message: "Appointment booked" });
+
+
   } catch (error) {
     console.log(error);
     
@@ -123,4 +153,36 @@ const bookAppointment = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, getProfile, updateProfile };
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment };
+
+
+
+//  slotBooked => object (to reserve date)
+//  slotDate => day chosen by the client
+
+// {
+// "2025-02-14": ["10:00", "11:00", "12:00"]
+// }
+
+/**
+ * docData = { 
+doctorName: "dr. Amine",
+speciality: "Dentist",
+fees: 80,
+slots_booked: ["10:00", "11:00", "12:00"]
+}
+
+docData = { 
+doctorName: "dr. Salem",
+speciality: "Dentist",
+fees: 80,
+slots_booked: ["10:00", "11:00", "12:00"]
+}
+
+docData = { 
+doctorName: "dr. Anouar",
+speciality: "Dentist",
+fees: 80,
+slots_booked: ["10:00", "11:00", "12:00"]
+}
+ */
