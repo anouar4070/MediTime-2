@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { assets } from "../assets/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
-import { AppContext } from "../context/AppContext";
+
 import { toast } from "react-toastify";
 import axios from "axios";
+import { AppContext } from "../context/appContext";
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -72,6 +73,7 @@ const Appointment = () => {
             ? false
             : true;
 
+         //Only the available (unbooked) slots are included in `timeSlots`, which is then used to update `docSlots`.   
         if (isSlotAvailable) {
           //add slot to array
           timeSlots.push({
@@ -108,6 +110,8 @@ const Appointment = () => {
 
       if (data.success) {
         toast.success(data.message);
+        // Refresh the global doctors data to reflect the updated booked slots.
+        getDoctorsData();
         getDoctorsData();
         navigate("/my-appointments");
       } else {
@@ -168,7 +172,7 @@ const Appointment = () => {
                 {docInfo.about}
               </p>
             </div>
-            <p className="text-gray-500 font-medium md-4 ">
+            <p className="text-gray-500 font-medium mt-4 ">
               Appointment fee:{" "}
               <span className="text-gray-600">
                 {docInfo.fees} {currencySymbol}{" "}

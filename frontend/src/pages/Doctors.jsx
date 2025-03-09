@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../context/appContext";
+
 
 const Doctors = () => {
   const navigate = useNavigate();
@@ -116,6 +117,7 @@ const Doctors = () => {
             Gastroenterologist
           </p>
         </div>
+
         <div className="w-full grid grid-cols-auto gap-4 gap-y-6 ">
           {filterDoc.map((item, index) => (
             <div

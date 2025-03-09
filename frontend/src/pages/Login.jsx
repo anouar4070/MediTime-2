@@ -28,6 +28,7 @@ const navigate = useNavigate()
         } else {
           toast.error(data.message);
         } 
+        
       } else {
         const { data } = await axios.post(backendUrl + "/api/user/login", {
           email,

@@ -70,6 +70,7 @@ if(data.success){
     <form onSubmit={onSubmitHandler} className="m-5 w-full">
       <p className="mb-3 text-lg font-medium">Add Doctor</p>
       <div className="bg-white px-8 py-8 border rounded w-full max-w-4xl max-h-[80vh] overflow-y-scroll ">
+        
         <div className="flex items-center gap-2 mb-8 text-gray-500">
           <label htmlFor="doc-img">
             <img src={docImg ? URL.createObjectURL(docImg) : assets.upload_area} alt="" className="w-16 bg-gray-100 rounded-full cursor-pointer" />
@@ -169,3 +170,8 @@ export default AddDoctor;
 
 // formData.append(key, value)
 // formData.append("name", "amine")
+
+/*
+ ** Why false instead of null or undefined?
+  You could have initialized docImg with null or undefined, but false is often used to represent a disabled or non-existent state, especially to avoid verification errors (docImg && URL.createObjectURL(docImg)).
+ */
