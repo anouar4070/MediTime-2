@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/appContext";
+import { loadStripe } from "@stripe/stripe-js";
 
 const MyAppointments = () => {
   const { backendUrl, token, getDoctorsData } = useContext(AppContext);
@@ -73,16 +74,54 @@ const MyAppointments = () => {
     }
   };
 
+const initPay = (order) => {
+   const options = {
+        key: import.meta.env.VITE_STRIPE_SECRET_KEY,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Appointment Payment',
+        description: 'Appointment Payment',
+        order_id: order.id,
+        receipt: order.receipt,
+        handler: async(res) => {
+                console.log(res);
+        },
+  //       success_url: process.env.SUCCESS_URL,
+  //       cancel_url: process.env.CANCEL_URL,
+  //       mode: "payment",
+  
+  //       line_items: [
+  //         {
+  //           price_data: {    
+  //             currency: "usd",
+  //             unit_amount: (appointmentData.docData.fees * 100),
+  //             product_data: {
+  //               name: `Appointment with doctor ${appointmentData.docData.name} in ${appointmentData.slotDate} at ${appointmentData.slotTime}`
+  //             },
+  //           },
+  //           quantity: 1, //A medical appointment is a single service => quantity: 1
+  //         },
+  //       ],
+      };
+  const stpe = new window.Stripe(options)
+  stpe.open()
+}
+
+
 const appointmentStripe = async(appointmentId) => {
   try {
-    const {data} = await axios.post(backendUrl + "/api/user/payment-stripe",
+    const {data} = await axios.post(backendUrl + "/api/user/payment-stripepay",
       { appointmentId },
       {
         headers: {token},
       })
-   console.log('Response From Backend', data)
+   console.log(data.order)
       if (data.success) {
+        initPay(data.order)
+      // window.location.replace(data.order.url);
      
+    //  window.location.href = data.order.url;
+
         console.log(data.order);
       }
   } catch (error) {

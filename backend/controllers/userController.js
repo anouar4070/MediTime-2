@@ -5,7 +5,7 @@ import doctorModel from "../models/doctorModel.js";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import appointmentModel from "../models/appointmentModel.js";
-import Stripe from "stripe";
+import { Stripe as stripepay } from "stripe";
 
 // API to register User
 const registerUser = async (req, res) => {
@@ -208,9 +208,8 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
-const stripePayInstance = new Stripe({
-  key_id: process.env.STRIPE_KEY_ID,
-  key_secret: process.env.STRIPE_SECRET_KEY,
+const stripePayInstance = new stripepay({
+key_secret: process.env.STRIPE_SECRET_KEY
 });
 
 //* *** API to make payment of appointment using Stripe ***
@@ -230,11 +229,11 @@ const paymentStripe = async (req, res) => {
     const options = {
       amount: appointmentData.amount * 100,
       currency: process.env.CURRENCY,
-      receipt: appointmentId,
-    };
-
+      receipt: appointmentId
+    }
     //creating of an order
-    const order = await stripePayInstance.orders.create(options);
+    const order = await stripePayInstance.checkout.sessions.create(options);
+
     res.json({ success: true, order });
   } catch (error) {
     console.log(error);
@@ -250,7 +249,7 @@ export {
   bookAppointment,
   listAppointment,
   cancelAppointment,
-  paymentStripe
+  paymentStripe,
 };
 
 //  slotBooked => object (to reserve date)
