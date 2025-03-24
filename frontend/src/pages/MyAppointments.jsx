@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/appContext";
-import {useNavigate} from "react-router-dom";
+//import {useNavigate} from "react-router-dom";
 
 const MyAppointments = () => {
   const { backendUrl, token, getDoctorsData } = useContext(AppContext);
@@ -24,7 +24,7 @@ const MyAppointments = () => {
     "Dec",
   ];
 
-const navigate= useNavigate()
+//const navigate= useNavigate()
 
   const slotDateFormat = (slotDate) => {
     const dateArray = slotDate.split("_");
@@ -79,7 +79,7 @@ const navigate= useNavigate()
 
 const appointmentStripe = async(appointmentId) => {
   try {
-    const {data} = await axios.post(backendUrl + "/api/user/verifyStripe",
+    const {data} = await axios.post(backendUrl + "/api/user/payment-stripe",
       { appointmentId },
       {
         headers: {token},
@@ -87,10 +87,10 @@ const appointmentStripe = async(appointmentId) => {
    console.log(data.order)
       if (data.success) {
       // window.location.replace(data.order.url);
-      //window.open(data.order.url, "_blank");
+      window.open(data.order.url, "_blank");
     //  window.location.href = data.order.url;
-   getUserAppointments()
-   navigate('/my-appointments')
+   //getUserAppointments()
+   //navigate('/my-appointments')
         console.log(data.order);
       }
   } catch (error) {
