@@ -261,6 +261,32 @@ const paymentStripe = async (req, res) => {
   }
 };
 
+//* API to verify Payment of Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+const verifyStripe = async(req, res) => {
+  try {
+    const { id } =  req.body;
+    const orderInfo = await stripe.checkout.sessions.retrieve(id)
+    console.log(orderInfo);
+    if (orderInfo.status === 'paid') {
+      await appointmentModel.findByIdAndUpdate(orderInfo.payment_intent, {payment: true})
+      res.json({success: true, message: "Payment done successfully"})
+    }else{
+      res.json({success: false, message: "Payment Failed!"})
+
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+}
+
+/**
+ * 
+ */
+
 export {
   registerUser,
   loginUser,
@@ -269,7 +295,8 @@ export {
   bookAppointment,
   listAppointment,
   cancelAppointment,
-  paymentStripe
+  paymentStripe,
+  verifyStripe
 };
 
 //  slotBooked => object (to reserve date)

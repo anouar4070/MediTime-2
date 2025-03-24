@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/appContext";
+import {useNavigate} from "react-router-dom";
 
 const MyAppointments = () => {
   const { backendUrl, token, getDoctorsData } = useContext(AppContext);
@@ -22,6 +23,9 @@ const MyAppointments = () => {
     "Nov",
     "Dec",
   ];
+
+const navigate= useNavigate()
+
   const slotDateFormat = (slotDate) => {
     const dateArray = slotDate.split("_");
     return (
@@ -75,7 +79,7 @@ const MyAppointments = () => {
 
 const appointmentStripe = async(appointmentId) => {
   try {
-    const {data} = await axios.post(backendUrl + "/api/user/payment-stripe",
+    const {data} = await axios.post(backendUrl + "/api/user/verifyStripe",
       { appointmentId },
       {
         headers: {token},
@@ -83,13 +87,15 @@ const appointmentStripe = async(appointmentId) => {
    console.log(data.order)
       if (data.success) {
       // window.location.replace(data.order.url);
-      window.open(data.order.url, "_blank");
+      //window.open(data.order.url, "_blank");
     //  window.location.href = data.order.url;
-
+   getUserAppointments()
+   navigate('/my-appointments')
         console.log(data.order);
       }
   } catch (error) {
-    
+    console.log(error);
+      toast.error(error.message);
   }
 }
 
@@ -135,6 +141,7 @@ const appointmentStripe = async(appointmentId) => {
             </div>
             <div></div>
             <div className="flex flex-col gap-2 justify-end">
+              {!item.cancelled && item.payment && <button className="sm:min-w-48 py-2 border rounded text-stone-500 bg-indigo-50">Paid</button>}
               {!item.cancelled && (
                 <button 
                 onClick={() => appointmentStripe(item._id)}
