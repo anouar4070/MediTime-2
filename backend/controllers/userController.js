@@ -217,6 +217,7 @@ const paymentStripe = async (req, res) => {
     const { appointmentId } = req.body;
     const appointmentData = await appointmentModel.findById(appointmentId);
     if (!appointmentData || appointmentData.cancelled) {
+      
       return res.json({
         success: false,
         message: "Appointment Cancelled or Not Found",
@@ -252,7 +253,7 @@ const paymentStripe = async (req, res) => {
 
     //creating of an order
     // const order = await stripePayInstance.orders.create(options);
-    const order = await stripePayInstance.checkout.sessions.create(options)
+    const order = await stripePayInstance.checkout.sessions.create(options);
 
     res.json({ success: true, order });
   } catch (error) {
